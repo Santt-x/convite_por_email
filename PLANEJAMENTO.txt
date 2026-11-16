@@ -1,0 +1,263 @@
+PLANEJAMENTO DO PROJETO — CONVITE POR E-MAIL
+Empresa do enunciado: ZÉ Empréstimos
+Data do registro: 16/11/2026
+Linguagem: Python
+Ambiente de edição: Visual Studio Code
+
+
+1. CONTEXTO DA ATIVIDADE
+
+A empresa ZÉ Empréstimos deseja enviar um convite por e-mail aos seus clientes
+para um jantar de aniversário. O evento acontecerá no dia 11/12/2026, às 20h30,
+na própria empresa. Os convidados deverão responder se participarão.
+
+O texto apresentado na atividade foi:
+
+"Olá, você é convidado para mais um aniversário da empresa ZÉ Empréstimos onde
+será servido um delicioso jantar dia 11/12/2026 as 20:30 na própria empresa.
+Por favor marque se participará ou não e responda esse e-mail.
+[   ] SIM, estarei presente.
+[   ] NÃO conseguirei participar."
+
+
+2. OBJETIVO DO PROJETO
+
+Desenvolver um programa que leia uma lista de clientes, prepare um convite
+personalizado para cada pessoa e permita enviar as mensagens por e-mail.
+
+Para facilitar a demonstração e a avaliação, o programa também deve funcionar
+sem uma conta de e-mail configurada, por meio de uma simulação local.
+
+
+3. DECISÕES TOMADAS NO PLANEJAMENTO
+
+3.1. Aplicação pelo terminal
+Foi escolhida uma aplicação de terminal para manter o foco na lógica em Python,
+na leitura de arquivos, na montagem das mensagens e no envio de e-mails.
+
+3.2. Clientes armazenados em CSV
+O arquivo clientes.csv contém as colunas nome e email. Esse formato permite
+editar a lista sem modificar o código. Não foi necessário usar banco de dados.
+
+Exemplo com dados fictícios:
+nome,email
+Ana Silva,ana@example.com
+Bruno Souza,bruno@example.com
+
+3.3. Mensagens individuais
+Cada cliente recebe um e-mail separado, com seu nome na saudação. A mensagem
+contém apenas o endereço daquele destinatário no campo de destino.
+
+3.4. Confirmação de presença por resposta ao e-mail
+As opções SIM e NÃO são texto. O destinatário deve clicar em Responder no seu
+aplicativo de e-mail, marcar uma opção com X e enviar a resposta à empresa.
+As opções não são botões nem caixas interativas. A consulta e a contagem das
+respostas ficam a cargo de quem administra a caixa de entrada da empresa.
+
+3.5. Simulação como comportamento padrão
+Executar o programa sem a opção --enviar apenas gera as prévias dos convites.
+Assim, o professor pode avaliar a atividade sem conexão SMTP e sem senha.
+
+3.6. Envio real separado da simulação
+O envio real exige a opção --enviar, os dados da conta SMTP e uma senha.
+A configuração fica em config.json, criado a partir de config.exemplo.json.
+A senha é solicitada de forma oculta no terminal ou obtida da variável de
+ambiente SMTP_SENHA. O programa não salva a senha em arquivo.
+
+3.7. Bibliotecas incluídas no Python
+Não foram necessárias dependências externas nem instalação de pacotes com pip.
+O projeto foi organizado para execução com Python 3.10 ou superior.
+
+
+4. REQUISITOS FUNCIONAIS
+
+RF01 — Ler clientes de um arquivo CSV com as colunas nome e email.
+RF02 — Aceitar vírgula ou ponto e vírgula como separador do arquivo.
+RF03 — Validar a lista inteira antes de iniciar qualquer envio.
+RF04 — Rejeitar lista vazia, nome vazio, e-mail com formato inválido e duplicatas.
+RF05 — Montar um convite com saudação personalizada, data, horário e local.
+RF06 — Incluir as opções de presença e a instrução para responder por e-mail.
+RF07 — Gerar uma prévia .eml por cliente no modo de simulação.
+RF08 — Permitir envio individual por SMTP com STARTTLS ou SSL/TLS.
+RF09 — Mostrar os envios aceitos pelo servidor e as falhas encontradas.
+RF10 — Direcionar as respostas ao endereço configurado como remetente.
+
+
+5. FLUXO PREVISTO E IMPLEMENTADO
+
+Início
+  -> Ler as opções informadas no terminal.
+  -> Ler e validar o arquivo de clientes.
+  -> Se houver erro, informar o problema e encerrar.
+  -> Verificar o modo de execução:
+       Simulação:
+         -> Montar uma mensagem por cliente.
+         -> Salvar arquivos .eml na pasta de prévias.
+         -> Exibir um exemplo do convite no terminal.
+       Envio real:
+         -> Ler e validar a configuração SMTP.
+         -> Obter a senha.
+         -> Conectar com TLS e autenticar a conta.
+         -> Montar e enviar uma mensagem por cliente.
+         -> Informar o resultado dos envios.
+Fim
+
+
+6. TEXTO ADOTADO NO PROGRAMA
+
+Assunto: Convite de aniversário — ZÉ Empréstimos
+
+Olá, {nome}!
+
+Você é convidado para mais um aniversário da empresa ZÉ Empréstimos, onde
+será servido um delicioso jantar no dia 11/12/2026, às 20h30, na própria empresa.
+
+Por favor, marque uma das opções abaixo com um X e responda a este e-mail:
+
+[ ] SIM, estarei presente.
+[ ] NÃO conseguirei participar.
+
+Esperamos por você!
+ZÉ Empréstimos
+
+O marcador {nome} é substituído pelo nome lido do arquivo de clientes.
+O texto recebeu ajustes de apresentação, mantendo as informações do enunciado.
+
+
+7. ORGANIZAÇÃO DO CÓDIGO E DOS ARQUIVOS
+
+main.py
+  Código principal, texto do convite e opções de execução.
+
+clientes.csv
+  Lista inicial com nomes e endereços fictícios para demonstração.
+
+config.exemplo.json
+  Modelo de configuração SMTP, sem credenciais reais.
+
+README.md
+  Instruções de instalação, execução, configuração e testes.
+
+PLANEJAMENTO.txt
+  Registro do planejamento e das decisões do projeto.
+
+tests/test_main.py
+  Testes automatizados com arquivos temporários e SMTP simulado.
+
+.vscode/
+  Configurações para edição e depuração no VS Code.
+
+.gitignore
+  Define arquivos locais e gerados que não devem entrar no versionamento,
+  como config.json, .env, previas/, .venv/ e caches do Python.
+
+previas/
+  Pasta gerada pela simulação. Contém as mensagens .eml para conferência local.
+
+Funções principais de main.py:
+- email_valido: verifica o formato básico do endereço.
+- ler_clientes: lê e valida os dados do CSV.
+- montar_mensagem: cria o e-mail com assunto, remetente, destinatário e convite.
+- simular: grava as mensagens de demonstração sem acessar o servidor SMTP.
+- ler_configuracao: valida os parâmetros necessários ao envio real.
+- enviar_convites: conecta, autentica e envia as mensagens individualmente.
+- main: interpreta os argumentos e coordena a execução.
+
+Bibliotecas utilizadas:
+- csv e json: leitura dos dados e da configuração.
+- email: montagem e codificação das mensagens, incluindo os acentos.
+- smtplib e ssl: comunicação SMTP com conexão protegida por TLS.
+- argparse: opções da linha de comando.
+- pathlib: caminhos e arquivos.
+- re: verificação básica dos endereços de e-mail.
+- getpass e os: obtenção da senha no terminal ou no ambiente.
+- unittest, unittest.mock e tempfile: testes sem envio de mensagens reais.
+
+
+8. ETAPAS DE DESENVOLVIMENTO
+
+Etapa 1 — Analisar o enunciado e identificar os dados obrigatórios do convite.
+Etapa 2 — Definir o CSV, o texto da mensagem e a forma de confirmação de presença.
+Etapa 3 — Implementar a leitura e a validação dos clientes.
+Etapa 4 — Implementar a montagem das mensagens e a simulação local.
+Etapa 5 — Implementar a configuração e o envio real por SMTP.
+Etapa 6 — Adicionar testes, instruções de uso e configuração do VS Code.
+Etapa 7 — Registrar o planejamento para acompanhamento e avaliação do professor.
+
+As etapas acima foram concluídas na versão descrita neste documento.
+O envio por uma conta SMTP real ainda depende da configuração e do teste
+com a conta que será utilizada.
+
+
+9. COMO DEMONSTRAR O PROJETO AO PROFESSOR
+
+1. Abrir a pasta do projeto no VS Code e selecionar um interpretador Python.
+2. Conferir o texto do convite em main.py e os exemplos em clientes.csv.
+3. Executar no terminal:
+
+   python main.py
+
+4. Observar o convite exibido e os arquivos .eml gerados em previas/.
+5. Executar os testes:
+
+   python -m unittest discover -s tests -v
+
+Também é possível executar a simulação com F5 no VS Code usando a configuração
+incluída. Não é necessário configurar a conta SMTP para essa demonstração.
+
+Para envio real, após configurar config.json e substituir os clientes fictícios:
+
+   python main.py --enviar
+
+O primeiro teste real deve usar somente um endereço do próprio responsável
+pelo teste. Instruções detalhadas estão no README.md.
+
+
+10. VERIFICAÇÕES REALIZADAS
+
+Na implementação inicial, os sete testes automatizados foram aprovados:
+
+1. Leitura de CSV em UTF-8 com BOM e separador ponto e vírgula.
+2. Bloqueio do envio quando há endereço inválido na lista.
+3. Rejeição de e-mails duplicados.
+4. Geração de prévia com acentos, data, horário e opções, sem conexão SMTP.
+5. Rejeição de configuração sem STARTTLS ou SSL/TLS.
+6. Ativação de TLS antes da autenticação e um destinatário por mensagem.
+7. Registro de falha em um destinatário com tentativa de envio ao seguinte.
+
+Também foi executada a simulação com os dois clientes de exemplo.
+Os testes de envio usam objetos simulados. Nenhum e-mail real foi enviado
+durante essas verificações; a entrega por um provedor real não foi validada.
+
+
+11. PREPARAÇÃO PARA UM NOVO REPOSITÓRIO GIT
+
+O projeto pode ser entregue com o código, os testes, os exemplos fictícios,
+o README, este planejamento e as configurações compartilháveis do VS Code.
+
+O arquivo config.exemplo.json deve acompanhar o projeto. O config.json com
+os dados reais da conta fica somente no ambiente local, conforme o .gitignore.
+Mantenha clientes.csv com os dados fictícios na versão enviada ao professor.
+
+O arquivo .vscode/settings.json desta máquina contém um caminho local para o
+interpretador Python. Ao preparar o repositório, ele pode ficar fora do commit.
+Em outro computador, selecione a instalação local do Python no VS Code.
+Os arquivos .vscode/launch.json e .vscode/extensions.json podem ser compartilhados.
+
+A publicação do repositório e o envio do link ao professor serão feitos depois.
+Este documento registra o projeto local; não confirma publicação em serviço Git.
+
+
+12. LIMITAÇÕES E POSSÍVEIS MELHORIAS
+
+Na versão atual:
+- As confirmações de presença são recebidas e conferidas manualmente.
+- A validação do endereço verifica o formato, não a existência da caixa postal.
+- O aceite pelo servidor SMTP não garante a entrega na caixa de entrada.
+- Uma nova execução com --enviar repete os envios da lista informada.
+- A autenticação implementada depende de o provedor permitir SMTP com senha
+  ou senha de aplicativo; não há autenticação OAuth implementada.
+
+Como melhorias futuras, podem ser estudados um histórico de envios, a geração
+de relatório de presença, uma interface gráfica e a integração com formulário
+de confirmação. Essas melhorias não fazem parte da implementação atual.

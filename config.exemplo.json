@@ -1,0 +1,8 @@
+{
+  "servidor": "smtp.seu-provedor.com",
+  "porta": 587,
+  "seguranca": "starttls",
+  "usuario": "seu-email@exemplo.com",
+  "remetente": "seu-email@exemplo.com",
+  "nome_remetente": "ZÉ Empréstimos"
+}
